@@ -160,6 +160,39 @@ python snapshot_sheets.py -d YOUR_FOLDER_ID "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74
 
 This creates a PIT subfolder inside `YOUR_FOLDER_ID`, copies the spreadsheet there, and updates any `IMPORTRANGE` (or similar) references to point to the new copy. Output is logged to stderr (use `-v` for debug).
 
+---
+
+## Enterprise use
+
+If you plan to use this tool in an **enterprise Google Workspace** environment, confirm the following with your IT or security team before deployment:
+
+### Before you start
+
+- **Get approval** — This script creates copies of spreadsheets in Drive and uses Google Cloud APIs. Some orgs require formal approval for new integrations or tools that access Workspace data.
+- **GCP project** — You need a Google Cloud project with **Sheets API** and **Drive API** enabled. Your org may restrict who can create GCP projects or enable APIs; you might need to use an existing approved project.
+- **Credentials choice** — For automation, use a **service account** (recommended). For ad‑hoc use, OAuth (personal sign-in) may be allowed but is often blocked or restricted for unverified apps.
+
+### Things to confirm with IT
+
+| Topic | What to ask |
+|-------|-------------|
+| **Unverified apps** | OAuth apps that haven’t completed Google verification are often blocked. Ask: “Can users run third-party OAuth desktop apps, or must apps be admin-approved / internal?” If blocked, a **service account** avoids user OAuth. |
+| **Service accounts** | If using a service account: “Are we allowed to create service accounts and store JSON keys? Where should keys be stored (e.g. secret manager)?” |
+| **Shared drives** | Enterprise typically uses shared drives. The service account (or user) must have access to the **source sheets** and **destination folder**. Ask: “Can we add a service account as a member of specific shared drives/folders with Viewer (sources) and Editor (destination)?” |
+| **Data classification** | The script reads spreadsheet contents (including formulas) and writes copies. Confirm that the data you snapshot is allowed to be accessed by this tool and stored in the chosen destination. |
+| **Audit logging** | Workspace Admin may log Drive/Sheets activity. Ask whether copying and creating files via API is expected to appear in audit logs and if that’s acceptable. |
+| **DLP / retention** | Copying creates new files. Ask: “Do our DLP or retention policies apply to files created by this script? Do we need to label or classify the snapshot folder?” |
+
+### Recommended approach for enterprise
+
+1. Use a **service account** with a JSON key stored in a secure location (e.g. secret manager, not in source control).
+2. Create a dedicated **GCP project** (or use an IT-approved one) with only Sheets and Drive APIs enabled.
+3. Add the service account as **Viewer** on source shared drives/folders (or share specific sheets with its email).
+4. Add the service account as **Content manager** or **Editor** on the destination folder where PIT copies will be created.
+5. Run the script from a controlled environment (e.g. CI/CD, scheduled job, or approved VM) rather than ad-hoc on personal machines if your org requires it.
+
+---
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
