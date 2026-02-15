@@ -1,0 +1,13 @@
+# Credentials - never commit
+credentials.json
+credentials_oauth.json
+token.json
+
+# Snapshots and local output
+snapshots/
+
+# Python
+__pycache__/
+.venv/
+venv/
+.env
