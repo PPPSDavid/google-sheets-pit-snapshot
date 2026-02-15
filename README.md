@@ -1,6 +1,10 @@
 # Google Sheets point-in-time snapshot tool
 
-A Python script that creates **point-in-time (PIT) copies** of selected Google Sheets in Google Drive. Copies are full spreadsheets (not CSV exports) and can be placed next to the originals or in a dedicated folder.
+A Python script that creates **point-in-time (PIT) copies** of selected Google Sheets in Google Drive. Copies are full spreadsheets (not CSV exports) and can be placed in a destination folder or in a new folder in Drive root.
+
+> **Note:** This code was generated with AI assistance. Use and modify it as you like under the terms of the [MIT License](LICENSE).
+
+---
 
 - **Cross-references** (e.g. `IMPORTRANGE`) are detected and **rewritten** so they point to the PIT copies instead of the live originals, keeping the snapshot self-consistent and frozen in time.
 - If any formula references a spreadsheet **not** in your snapshot list, the tool **warns** you (value innovation risk) and recommends adding those sheets to the snapshot.
@@ -155,3 +159,7 @@ python snapshot_sheets.py -d YOUR_FOLDER_ID "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74
 ```
 
 This creates a PIT subfolder inside `YOUR_FOLDER_ID`, copies the spreadsheet there, and updates any `IMPORTRANGE` (or similar) references to point to the new copy. Output is logged to stderr (use `-v` for debug).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
